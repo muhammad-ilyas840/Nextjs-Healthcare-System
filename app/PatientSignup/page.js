@@ -2,8 +2,10 @@
 
 import { useState } from "react"
 import React from 'react'
+import useRouter from "next/navigation"
 
 const page = () => {
+  const router = useRouter()
     const [formData, setFormData] = useState({
         fullname: "",
         email: "",
@@ -39,6 +41,7 @@ const page = () => {
           bloodgroup: "",
           address: "",
         })
+        router.push('/Login')
       }
       else{
         alert(data.message)

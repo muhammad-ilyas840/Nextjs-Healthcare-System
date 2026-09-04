@@ -1,8 +1,9 @@
 "use client";
-
+import useRouter from "next/navigation"
 import React, { useState } from "react";
 
 const page = ()=>{
+  const router = useRouter()
   const [formData, setFormData] = useState({
     fullname: "",
     email: "",
@@ -42,6 +43,7 @@ const page = ()=>{
           consultationFee: "",
           address: "",
         })
+        router.push('/Login')
       }
       else{
         alert(data.message)

@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import React from 'react'
-import useRouter from "next/navigation"
+import {useRouter} from "next/navigation"
 
 const page = () => {
   const router = useRouter()

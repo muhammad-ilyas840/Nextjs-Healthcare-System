@@ -13,7 +13,7 @@ export function proxy(request) {
 
     if (token) {
         try {
-            jwt.verify(token, process.env.JWT_SECRET);
+            jwt.verify(token, process.env.Jwt_secret);
             isValidToken = true;
         } catch (error) {
             isValidToken = false;
@@ -39,23 +39,20 @@ export function proxy(request) {
     // Send already logged-in users to their dashboard
     if (pathname === "/") {
 
-        if (isValidToken && role === "Patient") {
-            return NextResponse.redirect(
-                new URL("/patientdashboard", request.url)
-            );
-        }
-
-        if (isValidToken && role === "Doctor") {
-            return NextResponse.redirect(
-                new URL("/doctordashboard", request.url)
-            );
-        }
-
+    if (isValidToken && role === "Patient") {
         return NextResponse.redirect(
-            new URL("/Login", request.url)
+            new URL("/patientdashboard", request.url)
         );
     }
 
+    if (isValidToken && role === "Doctor") {
+        return NextResponse.redirect(
+            new URL("/doctordashboard", request.url)
+        );
+    }
+
+    return NextResponse.next();
+}
 
     // Logged-in Patient shouldn't visit auth pages
     if (isValidToken && role === "Patient") {
@@ -63,7 +60,12 @@ export function proxy(request) {
         if (
             pathname === "/Login" ||
             pathname === "/PatientSignup" ||
-            pathname === "/DoctorSignup"
+            pathname === "/DoctorSignup" ||
+            pathname === "/DoctorAppointments" ||
+            pathname === "/doctordashboard" ||
+            pathname === "/DoctorProfile" ||
+            pathname === "/EditDoctor" ||
+            pathname === "/paymentrecord"
         ) {
             return NextResponse.redirect(
                 new URL("/patientdashboard", request.url)
@@ -78,7 +80,15 @@ export function proxy(request) {
         if (
             pathname === "/Login" ||
             pathname === "/PatientSignup" ||
-            pathname === "/DoctorSignup"
+            pathname === "/DoctorSignup" ||
+            pathname === "/EditPatient" ||
+            pathname === "/BookAppointment" ||
+            pathname === "/DoctorSignup" ||
+            pathname === "/getpatientpayment" ||
+            pathname === "/PatientAppointments" ||
+            pathname === "/patientdashboard" ||
+            pathname === "/PatientProfile" 
+
         ) {
             return NextResponse.redirect(
                 new URL("/doctordashboard", request.url)
@@ -119,6 +129,23 @@ export const config = {
         "/Login",
         "/PatientSignup",
         "/DoctorSignup",
+
+        // Patient-restricted pages
+        "/DoctorAppointments",
+        "/doctordashboard",
+        "/DoctorProfile",
+        "/EditDoctor",
+        "/paymentrecord/:path*",
+
+        // Doctor-restricted pages
+        "/EditPatient",
+        "/BookAppointment/:path*",
+        "/getpatientpayment/:path*",
+        "/PatientAppointments",
+        "/patientdashboard",
+        "/PatientProfile",
+
+        // Dashboard nested routes
         "/patientdashboard/:path*",
         "/doctordashboard/:path*"
     ]
